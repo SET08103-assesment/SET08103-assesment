@@ -12,6 +12,11 @@ public class App
         // Connect to database
         a.connect();
 
+        // Get Employee
+        city _city = a.getCity(5);
+        // Display results
+        a.displayCity(_city);
+
         // Disconnect from database
         a.disconnect();
     }
@@ -43,9 +48,9 @@ public class App
             try
             {
                 // Wait a bit for db to start
-                Thread.sleep(10);
+                Thread.sleep(10000);
                 // Connect to database
-                con = DriverManager.getConnection("jdbc:mysql://localhost:33060/world?useSSL=false", "root", "example");
+                con = DriverManager.getConnection("jdbc:mysql://db:3306/world?useSSL=false", "root", "example");
                 System.out.println("Successfully connected");
                 break;
             }
@@ -79,7 +84,7 @@ public class App
             }
         }
     }
-    public city getCity(String Name)
+    public city getCity(int ID)
     {
         try
         {
@@ -87,17 +92,21 @@ public class App
             Statement stmt = con.createStatement();
             // Create string for SQL statement
             String strSelect =
-                    "SELECT Name"
-                            + "FROM city ";
+                    "SELECT Name, ID, District, Population "
+                            + "FROM city "
+                            + "WHERE ID = " + ID;
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Return new employee if valid.
             // Check one is returned
             if (rset.next())
             {
-                city emp = new city();
-                emp.Name = rset.getString("first_name");
-                return emp;
+                city _city = new city();
+                _city.Name = rset.getString("Name");
+                _city.ID = rset.getInt("ID");
+                _city.District = rset.getString("District");
+                _city.Population = rset.getInt("Population");
+                return _city;
             }
             else
                 return null;
@@ -107,6 +116,17 @@ public class App
             System.out.println(e.getMessage());
             System.out.println("Failed to get employee details");
             return null;
+        }
+    }
+    public void displayCity(city _city)
+    {
+        if (_city != null)
+        {
+            System.out.println(
+                    _city.Name + " "
+                            + _city.ID + " "
+                            + _city.District + "\n"
+                            + _city.Population + "\n");
         }
     }
 }
