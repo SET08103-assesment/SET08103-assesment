@@ -13,7 +13,7 @@ public class App
         a.connect();
 
         // Get Employee
-        city _city = a.getCity(5);
+        City _city = a.getCity(5);
         // Display results
         a.displayCity(_city);
 
@@ -84,7 +84,7 @@ public class App
             }
         }
     }
-    public city getCity(int ID)
+    public City getCity(int ID)
     {
         try
         {
@@ -101,7 +101,7 @@ public class App
             // Check one is returned
             if (rset.next())
             {
-                city _city = new city();
+                City _city = new City();
                 _city.Name = rset.getString("Name");
                 _city.ID = rset.getInt("ID");
                 _city.District = rset.getString("District");
@@ -118,7 +118,7 @@ public class App
             return null;
         }
     }
-    public void displayCity(city _city)
+    public void displayCity(City _city)
     {
         if (_city != null)
         {
