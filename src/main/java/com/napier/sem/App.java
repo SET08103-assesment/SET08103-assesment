@@ -14,7 +14,7 @@ public class App
         a.connect();
 
         // Extract country's population information
-        ArrayList<CountryReport> countries = a.ReportOne();
+        ArrayList<CountryReport> countries = a.ReportThree();
         // Display results
         a.printCountries(countries);
 
@@ -49,9 +49,9 @@ public class App
             try
             {
                 // Wait a bit for db to start
-                Thread.sleep(10000);
+                Thread.sleep(0);
                 // Connect to database
-                con = DriverManager.getConnection("jdbc:mysql://db:3306/world?useSSL=false", "root", "example");
+                con = DriverManager.getConnection("jdbc:mysql://localhost:33060/world?useSSL=false", "root", "example");
                 System.out.println("Successfully connected");
                 break;
             }
@@ -103,6 +103,88 @@ public class App
                             + "FROM country "
                             + "JOIN city ON country.Capital=city.ID "
                             + "ORDER BY country.Population DESC; ";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract countries information
+            ArrayList<CountryReport> countries = new ArrayList<CountryReport>();
+            while (rset.next())
+            {
+                CountryReport ctr = new CountryReport();
+                ctr.Name = rset.getString("Name");
+                ctr.Code = rset.getString("Code");
+                ctr.Continent = rset.getString("Continent");
+                ctr.Region = rset.getString("Region");
+                ctr.Population = rset.getInt("Population");
+                ctr.Capital = rset.getString("city.Name");
+                countries.add(ctr);
+            }
+            return countries;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get countries details");
+            return null;
+        }
+    }
+    /**
+     * Report 2
+     * Gets all countries in a continent organised by largest population to smallest.
+     * @return A list of all countries in the world organised by largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<CountryReport> ReportTwo()
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT country.Name, country.Code, country.Continent, country.Region, country.Population, city.Name "
+                            + "FROM country "
+                            + "JOIN city ON country.Capital=city.ID "
+                            + "ORDER BY country.Continent, country.Population DESC; ";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract countries information
+            ArrayList<CountryReport> countries = new ArrayList<CountryReport>();
+            while (rset.next())
+            {
+                CountryReport ctr = new CountryReport();
+                ctr.Name = rset.getString("Name");
+                ctr.Code = rset.getString("Code");
+                ctr.Continent = rset.getString("Continent");
+                ctr.Region = rset.getString("Region");
+                ctr.Population = rset.getInt("Population");
+                ctr.Capital = rset.getString("city.Name");
+                countries.add(ctr);
+            }
+            return countries;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get countries details");
+            return null;
+        }
+    }
+    /**
+     * Report 3
+     * Gets all countries in a region organised by largest population to smallest.
+     * @return A list of all countries in the world organised by largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<CountryReport> ReportThree()
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT country.Name, country.Code, country.Continent, country.Region, country.Population, city.Name "
+                            + "FROM country "
+                            + "JOIN city ON country.Capital=city.ID "
+                            + "ORDER BY country.Region, country.Population DESC; ";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract countries information
