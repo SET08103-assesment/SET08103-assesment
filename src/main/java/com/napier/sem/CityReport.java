@@ -1,22 +1,25 @@
 package com.napier.sem;
 
-public class City {
+public class CityReport {
     public int ID;
 
     /**
-     * Employee's first name
+     * City's Name
      */
     public String Name;
 
     /**
-     * Employee's last name
+     * City's last Country code
      */
     public String CountryCode;
 
     /**
-     * Employee's job title
+     * City's District
      */
     public String District;
 
+    /**
+     * City's Population
+     */
     public int Population;
 }
