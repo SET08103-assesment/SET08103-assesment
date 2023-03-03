@@ -5,6 +5,11 @@ import java.util.ArrayList;
 
 public class App
 {
+    /**
+     * Main method
+     *
+     * @param args args passed into main
+     */
     public static void main(String[] args)
     {
         // Create new Application
@@ -14,7 +19,8 @@ public class App
         a.connect();
 
         // Extract country's population information
-        ArrayList<CountryReport> countries = a.ReportThree();
+        ArrayList<CountryReport> countries = a.ReportSix(5);
+
         // Display results
         a.printCountries(countries);
 
@@ -122,6 +128,7 @@ public class App
         }
         catch (Exception e)
         {
+            // Print a message if failed  to get a data
             System.out.println(e.getMessage());
             System.out.println("Failed to get countries details");
             return null;
@@ -163,6 +170,7 @@ public class App
         }
         catch (Exception e)
         {
+            // Print a message if failed  to get a data
             System.out.println(e.getMessage());
             System.out.println("Failed to get countries details");
             return null;
@@ -184,7 +192,7 @@ public class App
                     "SELECT country.Name, country.Code, country.Continent, country.Region, country.Population, city.Name "
                             + "FROM country "
                             + "JOIN city ON country.Capital=city.ID "
-                            + "ORDER BY country.Region, country.Population DESC; ";
+                            + "ORDER BY country.Population DESC; ";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract countries information
@@ -204,6 +212,148 @@ public class App
         }
         catch (Exception e)
         {
+            // Print a message if failed  to get a data
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get countries details");
+            return null;
+        }
+    }
+    /**
+     * Report 4
+     * Gets The top N populated countries in the world where N is provided by the user.
+     * Using prepared statement to allow the user provide the limit.
+     * @return A list of The top N populated countries in the world where N is provided by the user, or null if there is an error.
+     */
+    public ArrayList<CountryReport> ReportFour(int limit)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT country.Name, country.Code, country.Continent, country.Region, country.Population, city.Name "
+                            + "FROM country "
+                            + "JOIN city ON country.Capital=city.ID "
+                            + "ORDER BY country.Population DESC "
+                            + "LIMIT ? ";
+            PreparedStatement pstmt = con.prepareStatement(strSelect);
+            // Set the limit parameter
+            pstmt.setInt(1, limit);
+            // Execute the SQL statement
+            ResultSet rset = pstmt.executeQuery();
+            // Extract countries information
+            ArrayList<CountryReport> countries = new ArrayList<CountryReport>();
+            while (rset.next())
+            {
+                CountryReport ctr = new CountryReport();
+                ctr.Name = rset.getString("Name");
+                ctr.Code = rset.getString("Code");
+                ctr.Continent = rset.getString("Continent");
+                ctr.Region = rset.getString("Region");
+                ctr.Population = rset.getInt("Population");
+                ctr.Capital = rset.getString("city.Name");
+                countries.add(ctr);
+            }
+            return countries;
+        }
+        catch (Exception e)
+        {
+            // Print a message if failed  to get a data
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get countries details");
+            return null;
+        }
+    }
+    /**
+     * Report 5
+     * Gets The top N populated countries in a continent where N is provided by the user.
+     * Using prepared statement to allow the user provide the limit.
+     * @return A list of The top N populated countries in the world where N is provided by the user, or null if there is an error.
+     */
+    public ArrayList<CountryReport> ReportFive(int limit)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT country.Name, country.Code, country.Continent, country.Region, country.Population, city.Name "
+                            + "FROM country "
+                            + "JOIN city ON country.Capital=city.ID "
+                            + "ORDER BY country.Continent, country.Population DESC "
+                            + "LIMIT ? ";
+            PreparedStatement pstmt = con.prepareStatement(strSelect);
+            // Set the limit parameter
+            pstmt.setInt(1, limit);
+            // Execute the SQL statement
+            ResultSet rset = pstmt.executeQuery();
+            // Extract countries information
+            ArrayList<CountryReport> countries = new ArrayList<CountryReport>();
+            while (rset.next())
+            {
+                CountryReport ctr = new CountryReport();
+                ctr.Name = rset.getString("Name");
+                ctr.Code = rset.getString("Code");
+                ctr.Continent = rset.getString("Continent");
+                ctr.Region = rset.getString("Region");
+                ctr.Population = rset.getInt("Population");
+                ctr.Capital = rset.getString("city.Name");
+                countries.add(ctr);
+            }
+            return countries;
+        }
+        catch (Exception e)
+        {
+            // Print a message if failed  to get a data
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get countries details");
+            return null;
+        }
+    }
+    /**
+     * Report 6
+     * Gets The top N populated countries in a region where N is provided by the user.
+     * Using prepared statement to allow the user provide the limit.
+     * @return A list of The top N populated countries in the world where N is provided by the user, or null if there is an error.
+     */
+    public ArrayList<CountryReport> ReportSix(int limit)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT country.Name, country.Code, country.Continent, country.Region, country.Population, city.Name "
+                            + "FROM country "
+                            + "JOIN city ON country.Capital=city.ID "
+                            + "ORDER BY country.Region, country.Population DESC "
+                            + "LIMIT ? ";
+            PreparedStatement pstmt = con.prepareStatement(strSelect);
+            // Set the limit parameter
+            pstmt.setInt(1, limit);
+            // Execute the SQL statement
+            ResultSet rset = pstmt.executeQuery();
+            // Extract countries information
+            ArrayList<CountryReport> countries = new ArrayList<CountryReport>();
+            while (rset.next())
+            {
+                CountryReport ctr = new CountryReport();
+                ctr.Name = rset.getString("Name");
+                ctr.Code = rset.getString("Code");
+                ctr.Continent = rset.getString("Continent");
+                ctr.Region = rset.getString("Region");
+                ctr.Population = rset.getInt("Population");
+                ctr.Capital = rset.getString("city.Name");
+                countries.add(ctr);
+            }
+            return countries;
+        }
+        catch (Exception e)
+        {
+            // Print a message if failed  to get a data
             System.out.println(e.getMessage());
             System.out.println("Failed to get countries details");
             return null;
