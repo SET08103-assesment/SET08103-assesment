@@ -17,7 +17,7 @@ public class App {
         a.connect();
 
         // Extract country's population information
-        ArrayList<CityReport> cities = a.ReportSeven();
+        ArrayList<CityReport> cities = a.ReportEight();
 
         // Display results
         a.printCities(cities);
@@ -341,6 +341,42 @@ public class App {
                             + "FROM city "
                             + "JOIN country ON city.CountryCode=country.Code "
                             + "ORDER BY city.Population DESC; ";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract countries information
+            ArrayList<CityReport> cities = new ArrayList<CityReport>();
+            while (rset.next()) {
+                CityReport cty = new CityReport();
+                cty.Name = rset.getString("Name");
+                cty.CountryCode = rset.getString("country.Name");
+                cty.District = rset.getString("District");
+                cty.Population = rset.getInt("Population");
+                cities.add(cty);
+            }
+            return cities;
+        } catch (Exception e) {
+            // Print a message if failed  to get a data
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get cities details");
+            return null;
+        }
+    }
+    /**
+     * Report 8
+     * Gets all cities in the world organised by largest population to smallest.
+     *
+     * @return A list of all cities in the world organised by largest population to smallest, or null if there is an error.
+     */
+    public ArrayList<CityReport> ReportEight() {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT city.Name, country.Name, city.District, city.Population "
+                            + "FROM city "
+                            + "JOIN country ON city.CountryCode=country.Code "
+                            + "ORDER BY country.Continent, city.Population DESC; ";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract countries information
